@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ShuffleRecycler</string>
+    <string name="loading_data_please_wait">Loading data, please wait..</string>
+</resources>
