@@ -1,11 +1,9 @@
 package org.foenix.shufflerecycler;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +16,6 @@ import android.widget.Toast;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
-import org.foenix.shufflerecycler.database.DataProviderHelper;
 import org.foenix.shufflerecycler.model.Item;
 import org.foenix.shufflerecycler.model.ItemCollection;
 
@@ -109,21 +106,5 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    class ItemLoader extends AsyncTaskLoader {
-        private IDataInteractor mDataInteractor;
-        public ItemLoader(Context context) {
-            super(context);
-            mDataInteractor = new DataProviderHelper();
-        }
 
-        @Override
-        public List<Item> loadInBackground() {
-            return mDataInteractor.loadDataList();
-        }
-
-        @Override
-        protected void onStartLoading() {
-            forceLoad();
-        }
-    }
 }
