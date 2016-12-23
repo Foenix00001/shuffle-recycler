@@ -10,15 +10,9 @@ import com.facebook.stetho.Stetho;
  */
 
 public class ShuffleApplication extends Application {
-    private static Context context;
 
     public void onCreate() {
         super.onCreate();
-        ShuffleApplication.context = getApplicationContext();
         Stetho.initializeWithDefaults(this);
-    }
-
-    public static Context getAppContext() {
-        return ShuffleApplication.context;
     }
 }

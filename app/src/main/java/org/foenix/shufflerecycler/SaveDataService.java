@@ -12,17 +12,17 @@ import org.foenix.shufflerecycler.database.DataProviderHelper;
  */
 
 public class SaveDataService extends IntentService {
-    private IDataInteractor dataInteractor;
-
+    //private IDataInteractor dataInteractor;
     public SaveDataService() {
         super("SaveDataThread");
-        dataInteractor = new DataProviderHelper();
+
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         Item item = (Item) intent.getSerializableExtra("item");
-        dataInteractor.updateMoveItem(item);
+        //dataInteractor = new DataProviderHelper(getApplicationContext());
+        new DataProviderHelper(getApplicationContext()).updateMoveItem(item);
         //Log.i(TAG, item.toString() + " item processed in " + Thread.currentThread().getName());
     }
 

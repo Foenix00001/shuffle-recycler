@@ -21,8 +21,6 @@ import org.foenix.shufflerecycler.model.ItemCollection;
 
 import java.util.List;
 
-import static org.foenix.shufflerecycler.ShuffleApplication.getAppContext;
-
 public class MainActivity extends AppCompatActivity {
     public static final int LOADER_ID = 1;
     private View mProgressView;
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showErrorMessage(String message) {
-        Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 

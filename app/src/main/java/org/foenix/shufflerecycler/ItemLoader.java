@@ -17,7 +17,7 @@ public class ItemLoader extends AsyncTaskLoader {
 
     public ItemLoader(Context context) {
         super(context);
-        mDataInteractor = new DataProviderHelper();
+        mDataInteractor = new DataProviderHelper(context.getApplicationContext());
     }
 
     @Override
