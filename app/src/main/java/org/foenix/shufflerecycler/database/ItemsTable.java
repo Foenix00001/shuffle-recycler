@@ -23,4 +23,12 @@ public class ItemsTable {
             + " from  " + DATABASE_TABLE
             + " left outer join " + DATABASE_TABLE + "  " + DATABASE_TABLE_ALIAS
             + " on " + DATABASE_TABLE + "." + KEY_ROWID + "=" + DATABASE_TABLE_ALIAS + "." + ROW_ID_PREV;
+    public static final int ID_PATH_POSITION = 1;
+    public static final int ID_PREV_PATH_POSITION = 2;
+    public static Uri getMoveItemUri(long id, long id_prev) {
+        return CONTENT_URI.buildUpon()
+                .appendPath(Long.toString(id))
+                .appendPath(Long.toString(id_prev))
+                .build();
+    }
 }

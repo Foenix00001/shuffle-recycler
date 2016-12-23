@@ -25,6 +25,7 @@ public class DbContentProvider extends ContentProvider {
     private static final int ITEMS = 10;
     private static final int ITEMS_ID = 11;
     private static final int ITEMS_ALL = 12;
+    private static final int ITEMS_MOVE = 12;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private DbHelper mDbHelper;
 
@@ -40,6 +41,7 @@ public class DbContentProvider extends ContentProvider {
         matcher.addURI(authority, "items", ITEMS);
         matcher.addURI(authority, "items/all", ITEMS_ALL);
         matcher.addURI(authority, "items/#", ITEMS_ID);
+        matcher.addURI(authority, "items/#/#", ITEMS_MOVE);
         return matcher;
     }
 
@@ -79,7 +81,7 @@ public class DbContentProvider extends ContentProvider {
         long rowId;
         switch (sUriMatcher.match(uri)) {
             case ITEMS:
-                rowId = db.insertWithOnConflict(ItemsTable.DATABASE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                rowId = db.insert(ItemsTable.DATABASE_TABLE, null, values);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -125,12 +127,17 @@ public class DbContentProvider extends ContentProvider {
                 count = db.update(ItemsTable.DATABASE_TABLE, values, selection, selectionArgs);
                 break;
             case ITEMS_ID:
-                int id = Integer.parseInt(uri.getLastPathSegment());
-                finalWhere = ItemsTable.KEY_ROWID + "=" + id;
+                int _id = Integer.parseInt(uri.getLastPathSegment());
+                finalWhere = ItemsTable.KEY_ROWID + "=" + _id;
                 if (selection != null) {
                     finalWhere = finalWhere + " AND " + selection;
                 }
                 count = db.update(ItemsTable.DATABASE_TABLE, values, finalWhere, selectionArgs);
+                break;
+            case ITEMS_MOVE:
+                String id = uri.getPathSegments().get(ItemsTable.ID_PATH_POSITION);
+                String id_prev = uri.getPathSegments().get(ItemsTable.ID_PREV_PATH_POSITION);
+                count = moveItem(db, id, id_prev);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -163,4 +170,49 @@ public class DbContentProvider extends ContentProvider {
         }
     }
 
+    /**
+     * takes item with _id= id and "moves" it after item with _id=id_prev
+     * @param db database
+     * @param id _id of row to update
+     * @param id_prev row _id after one current row should goes to
+     * @return
+     */
+    private int moveItem(SQLiteDatabase db, String id, String id_prev) {
+        int count = 0;
+        db.beginTransaction();
+        try {
+            String[] projection = new String[]{ItemsTable.ROW_ID_PREV};
+            String selection = ItemsTable.KEY_ROWID + " = ?";
+            String[] selectionArgs = new String[]{id};
+            Cursor cursor = query(ItemsTable.CONTENT_URI, projection, selection, selectionArgs, null);
+            String ex_id_prev = null;
+            if (cursor != null) {
+                cursor.moveToFirst();
+                ex_id_prev = Long.toString(cursor.getLong((cursor.getColumnIndex(ItemsTable.ROW_ID_PREV))));
+                cursor.close();
+            }
+            ContentValues cv = new ContentValues();
+            cv.put(ItemsTable.ROW_ID_PREV, ex_id_prev);
+            String where = ItemsTable.ROW_ID_PREV + " = ?";
+            String[] whereArgs = new String[]{id};
+            count = count + update(ItemsTable.CONTENT_URI, cv, where, whereArgs);
+
+            cv.clear();
+            cv.put(ItemsTable.ROW_ID_PREV, id);
+            where = ItemsTable.ROW_ID_PREV + " = ?";
+            whereArgs = new String[]{id_prev};
+            count = count + update(ItemsTable.CONTENT_URI, cv, where, whereArgs);
+
+            cv.clear();
+            cv.put(ItemsTable.ROW_ID_PREV, id_prev);
+            where = ItemsTable.KEY_ROWID + " = ?";
+            whereArgs = new String[]{id};
+            count = count + update(ItemsTable.CONTENT_URI, cv, where, whereArgs);
+
+            db.setTransactionSuccessful();
+            return count;
+        } finally {
+            db.endTransaction();
+        }
+    }
 }
