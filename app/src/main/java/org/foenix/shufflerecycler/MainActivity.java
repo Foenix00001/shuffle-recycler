@@ -3,6 +3,7 @@ package org.foenix.shufflerecycler;
 import android.content.Intent;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
@@ -15,11 +16,13 @@ import android.widget.Toast;
 
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
+import com.squareup.leakcanary.RefWatcher;
 
 import org.foenix.shufflerecycler.model.Item;
 import org.foenix.shufflerecycler.model.ItemCollection;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     public static final int LOADER_ID = 1;
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerAdapter.IDataChangeListener mDataChangeListener = new RecyclerAdapter.IDataChangeListener() {
         @Override
         public void onMoveItem(Item item) {
-            startService(mSaveDataIntent.putExtra("time", 3).putExtra("item", item) );
+            startService(mSaveDataIntent.putExtra("time", 3).putExtra("item", item));
         }
     };
 
@@ -61,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mProgressView = findViewById(R.id.progress_view);
         mRecycler = (RecyclerView) findViewById(R.id.recycler);
         showProgress();
