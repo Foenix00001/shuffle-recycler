@@ -23,6 +23,10 @@ public class ItemsTable {
             + " from  " + DATABASE_TABLE
             + " left outer join " + DATABASE_TABLE + "  " + DATABASE_TABLE_ALIAS
             + " on " + DATABASE_TABLE + "." + KEY_ROWID + "=" + DATABASE_TABLE_ALIAS + "." + ROW_ID_PREV;
+    public static final String UPDATE_QUERY = "update " + DATABASE_TABLE + " set " + ROW_ID_PREV + " =(select " + ROW_ID_PREV +
+            " from " +DATABASE_TABLE +  " where "
+            + KEY_ROWID + " =?) where " + ROW_ID_PREV + " =?"            ;
+
     public static final int ID_PATH_POSITION = 1;
     public static final int ID_PREV_PATH_POSITION = 2;
     public static Uri getMoveItemUri(long id, long id_prev) {

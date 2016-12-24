@@ -31,7 +31,7 @@ public class DbContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mDbHelper = DbHelper.getInstance(getContext());
+        mDbHelper = new DbHelper(getContext());
         return true;
     }
 
@@ -181,26 +181,14 @@ public class DbContentProvider extends ContentProvider {
         int count = 0;
         db.beginTransaction();
         try {
-            String[] projection = new String[]{ItemsTable.ROW_ID_PREV};
-            String selection = ItemsTable.KEY_ROWID + " = ?";
-            String[] selectionArgs = new String[]{id};
-            Cursor cursor = query(ItemsTable.CONTENT_URI, projection, selection, selectionArgs, null);
-            String ex_id_prev = null;
-            if (cursor != null) {
-                cursor.moveToFirst();
-                ex_id_prev = Long.toString(cursor.getLong((cursor.getColumnIndex(ItemsTable.ROW_ID_PREV))));
-                cursor.close();
-            }
-            ContentValues cv = new ContentValues();
-            cv.put(ItemsTable.ROW_ID_PREV, ex_id_prev);
-            String where = ItemsTable.ROW_ID_PREV + " = ?";
-            String[] whereArgs = new String[]{id};
-            count = count + update(ItemsTable.CONTENT_URI, cv, where, whereArgs);
+            String sql = ItemsTable.UPDATE_QUERY;
+            String[] selectionArgs = new String[]{id,id};
+            count = count + db.rawQuery(sql, selectionArgs).getCount();
 
-            cv.clear();
+            ContentValues cv = new ContentValues();
             cv.put(ItemsTable.ROW_ID_PREV, id);
-            where = ItemsTable.ROW_ID_PREV + " = ?";
-            whereArgs = new String[]{id_prev};
+            String where = ItemsTable.ROW_ID_PREV + " = ?";
+            String[] whereArgs = new String[]{id_prev};
             count = count + update(ItemsTable.CONTENT_URI, cv, where, whereArgs);
 
             cv.clear();
