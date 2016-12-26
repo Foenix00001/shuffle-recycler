@@ -49,15 +49,30 @@ class DbHelper extends SQLiteOpenHelper {
     }
 
     private void copyDataBase(InputStream is, String name) throws IOException {
-        OutputStream os = new FileOutputStream(name);
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = is.read(buffer)) > 0) {
-            os.write(buffer, 0, length);
+        try {
+            OutputStream os = new FileOutputStream(name);
+            try {
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = is.read(buffer)) > 0) {
+                    os.write(buffer, 0, length);
+                }
+            } finally {
+                try {
+                    os.flush();
+                    os.close();
+                } catch (IOException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+
         }
-        os.flush();
-        os.close();
-        is.close();
     }
 
     private boolean isDataBaseExist() {

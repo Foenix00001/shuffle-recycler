@@ -20,6 +20,8 @@ import org.foenix.shufflerecycler.utils.ViewUtils;
 
 /**
  * Created by Foenix on 16.12.2016.
+ * a few rows onBindViewHolder, onCheckCanStartDrag taken here
+ * https://github.com/h6ah4i/android-advancedrecyclerview/tree/master/example/src/main/java/com/h6ah4i/android/example/advrecyclerview/demo_d_on_longpress
  */
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>
@@ -122,7 +124,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         if (fromPosition == toPosition) {
             return;
         }
-
         mItems.moveItem(fromPosition, toPosition);
         mListener.onMoveItem(mItems.getData().get(toPosition));
         notifyItemMoved(fromPosition, toPosition);

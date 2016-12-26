@@ -13,7 +13,7 @@ public class ItemsTable {
     public static final String KEY_ROWID = "_id";
     public static final String ROW_DESCRIPTION = "description";
     public static final String ROW_ID_PREV = "id_prev";//link to next row id is redundant;
-    public static final String FIELDS[] = {KEY_ROWID, ROW_DESCRIPTION, ROW_ID_PREV};
+    //public static final String FIELDS[] = {KEY_ROWID, ROW_DESCRIPTION, ROW_ID_PREV};
     public static final String DATABASE_TABLE_ALIAS = "items2";
     public static final String ROW_ID_NEXT_ALIAS = "id_next";
     public static final String JOIN_QUERY = "select " + DATABASE_TABLE + "." + KEY_ROWID + ", "

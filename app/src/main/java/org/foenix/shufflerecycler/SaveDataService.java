@@ -3,10 +3,8 @@ package org.foenix.shufflerecycler;
 import android.app.IntentService;
 import android.content.Intent;
 
-import org.foenix.shufflerecycler.model.Item;
 import org.foenix.shufflerecycler.database.DataProviderHelper;
-
-import java.util.concurrent.TimeUnit;
+import org.foenix.shufflerecycler.model.Item;
 
 
 /**
@@ -30,11 +28,6 @@ public class SaveDataService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Item item = (Item) intent.getSerializableExtra("item");
         mDataProviderHelper.updateMoveItem(item);
-        /*try {
-            TimeUnit.SECONDS.sleep(15);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
     }
 
 }
